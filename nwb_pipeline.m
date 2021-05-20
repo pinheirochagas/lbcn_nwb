@@ -9,11 +9,20 @@ generateCore();
 project_name = 'MMR';
 
 %% Retrieve subject information
-sbj_name ='S13_57'
-% center = googleSheet.center{sbj_number};
-center = 'Stanford'
+[DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
+sheet = GetGoogleSpreadsheet(DOCID, GID);
+sbj_names = sheet.subject_name
+sbj_name = sbj_names{end};
+% for i = 1:length(sbj_names)
+%   create_nwb_file(sbj_name)
+% end
 
 %% Set up NWB file
+nwb = NwbFile();
+nwb.general_institution = 'Stanford';
+[nwb.session_description, nwb.general_keywords] = get_task(sbj_name);
+
+
 % what other file info to include
 % all possibilities listed here: https://neurodatawithoutborders.github.io/matnwb/doc/+types/+core/NWBFile.html
 nwb = NwbFile( ...
