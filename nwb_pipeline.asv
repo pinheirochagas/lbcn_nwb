@@ -41,7 +41,7 @@ subject.subject_id = sbj_name;
 subject.species = 'Homo sapiens';
 
 % add birth_date? 
-[subject.sex, subject.age] = get_subject(sbj_name);
+[subject.sex, subject.iq] = get_subject(sbj_name);
 
 
 % display subject object
