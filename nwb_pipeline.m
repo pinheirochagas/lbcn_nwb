@@ -13,7 +13,7 @@ project_name = 'MMR';
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 sbj_names = sheet.subject_name
-sbj_name = sbj_names{end};
+sbj_name = sbj_names{1};
 % for i = 1:length(sbj_names)
 %   create_nwb_file(sbj_name)
 % end
@@ -21,17 +21,10 @@ sbj_name = sbj_names{end};
 %% Set up NWB file
 nwb = NwbFile();
 nwb.general_institution = 'Stanford';
-[nwb.session_description, nwb.general_keywords] = get_task(sbj_name);
-
-
-% what other file info to include
-% all possibilities listed here: https://neurodatawithoutborders.github.io/matnwb/doc/+types/+core/NWBFile.html
-nwb = NwbFile( ...
-    'session_description', 'MMR', ...
-    'identifier', sbj_name, ... %make sure deidentified
-    'session_start_time', datetime(2013, 10, 18), ... % what if theres multiple dates?
-    'general_institution', center, ...
-    'general_keywords', project_name);
+[nwb.session_description, nwb.general_keywords, nwb.session_start_time] = get_task(sbj_name);
+nwb.general_session_id = sbj_name;
+nwb.identifier = sbj_name;
+nwb.general_source_script_file_name	= 'nwb_pipeline.m';
 
 % display nwb object
 nwb
@@ -42,6 +35,9 @@ nwb
 %   deidentified, no initials
 
 % load in global variable and read in demographics
+subject = types.core.Subject();
+
+
 
 subject = types.core.Subject( ...
     'subject_id', sbj_name, ...
@@ -55,6 +51,9 @@ nwb.general_subject = subject;
 
 %% Test write
 nwbExport(nwb, 'nwb_practice.nwb')
+
+% go to matnwb folder 
+cd('/Volumes/Areti_drive/code/matnwb');
 read_nwbfile = nwbRead('nwb_practice.nwb')
 
 %% Trials

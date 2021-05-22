@@ -11,7 +11,7 @@ general_keywords = sheet.general_keywords{strcmp(sheet.subject_name, sbj_name)};
 %date stored in month/day/year format
 date = sheet.session1_start{strcmp(sheet.subject_name, sbj_name)};
 date = strsplit(date, '/');
-session_start = datetime(str2double(strcat('20', date(3))), str2double(date(1)), str2double(date(2)));
+session_start = datetime(date(3), date(1), date(2));
 
 end
 
