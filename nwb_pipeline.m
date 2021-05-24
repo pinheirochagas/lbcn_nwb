@@ -58,7 +58,7 @@ cd('/Volumes/Areti_drive/code/matnwb');
 read_nwbfile = nwbRead('nwb_practice.nwb')
 
 %% Trials
-nwb.trial = organize_trials(sbj_name, task);
+nwb.trial = organize_trials(sbj_name, nwb.session_description);
 
 %goes through all blocks, creates 'trial' time interval object for each block
 %and adds to an array, array will go in intervals_trials group in nwb file
