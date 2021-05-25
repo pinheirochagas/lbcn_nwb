@@ -58,11 +58,15 @@ cd('/Volumes/Areti_drive/code/matnwb');
 read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
 
 %% Trials
-nwb.intervals_trials = organize_trials(sbj_name, nwb.session_description);
+nwb.intervals_trials = organize_trials(sbj_name);
 
 % to access different fields in vectordata, use .get('nameOfField').data
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
+%% Electrode table
+%stores fields x, y, z, impedence, location, filtering, and electrode_group
+%but more can be added
 
+nwb.general_extracellular_ephys_electrodes = get_electrodes(sbj_name);
 
