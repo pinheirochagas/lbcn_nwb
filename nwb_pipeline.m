@@ -60,39 +60,9 @@ read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.n
 %% Trials
 nwb.intervals_trials = organize_trials(sbj_name, nwb.session_description);
 
-%goes through all blocks, creates 'trial' time interval object for each block
-%and adds to an array, array will go in intervals_trials group in nwb file
+% to access different fields in vectordata, use .get('nameOfField').data
+% for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
+%           will get the first block's 'CorrectResult' data 
 
-block_array = types.core.TimeIntervals.empty;
 
-for block_num = 1:4
-    switch block_num
-        case 1
-            descrip1 = 'block 08 trial data and properties';
-            load('/Volumes/Areti_drive/data/psychData/S13_57_TVD/TVD_08/trialinfo_TVD_08.mat');
-            descrip2 = 'start time of each trial in block 1';
-        case 2 
-            descrip1 = 'block 10 trial data and properties';
-            load('/Volumes/Areti_drive/data/psychData/S13_57_TVD/TVD_10/trialinfo_TVD_10.mat');
-            descrip2 = 'start time of each trial in block 2';
-        case 3
-            descrip1 = 'block 13 trial data and properties';
-            load('/Volumes/Areti_drive/data/psychData/S13_57_TVD/TVD_13/trialinfo_TVD_13.mat');
-            descrip2 = 'start time of each trial in block 3';
-        case 4
-            descrip1 = 'block 14 trial data and properties';
-            load('/Volumes/Areti_drive/data/psychData/S13_57_TVD/TVD_14/trialinfo_TVD_14.mat');
-            descrip2 = 'start time of each trial in block 4';
-    end
-    
-    trials = types.core.TimeIntervals(...
-    'colnames', {'start_time', 'stop_time'}, ...
-    'description', descrip1 ,...
-    'id', types.hdmf_common.ElementIdentifiers('data', 0:height(trialinfo)), ...
-    'start_time', types.hdmf_common.VectorData('data', trialinfo.allonsets, ...
-       'description', descrip2));
-   
-   block_array = [block_array, trials];
-    
-end
 
