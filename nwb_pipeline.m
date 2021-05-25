@@ -13,7 +13,7 @@ project_name = 'MMR';
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 sbj_names = sheet.subject_name
-sbj_name = sbj_names{1};
+sbj_name = sbj_names{end};
 % for i = 1:length(sbj_names)
 %   create_nwb_file(sbj_name)
 % end
@@ -55,10 +55,10 @@ nwbExport(nwb, 'nwb_practice.nwb')
 
 % go to matnwb folder 
 cd('/Volumes/Areti_drive/code/matnwb');
-read_nwbfile = nwbRead('nwb_practice.nwb')
+read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
 
 %% Trials
-nwb.trial = organize_trials(sbj_name, nwb.session_description);
+nwb.intervals_trials = organize_trials(sbj_name, nwb.session_description);
 
 %goes through all blocks, creates 'trial' time interval object for each block
 %and adds to an array, array will go in intervals_trials group in nwb file
@@ -96,5 +96,3 @@ for block_num = 1:4
     
 end
 
-%intervals_trials holds trial start_time info for each block
-nwb.intervals_trials = block_array;
