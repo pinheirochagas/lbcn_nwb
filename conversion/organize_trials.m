@@ -23,7 +23,7 @@ for i = 1: length(block_names)
     
     % file and folder names need to be deidentified 
     sbj_file = strcat('/Volumes/Areti_drive/data/psychData/', ext_name, '/', block_names{i}, '/trialinfo_', block_names{i}, '.mat');
-    load(sbj_file{i})
+    load(sbj_file{1})
     
     % add start & stop time to trialinfo table
     trialinfo.start_time = (trialinfo.allonsets * 500);

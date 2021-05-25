@@ -12,7 +12,7 @@ project_name = 'MMR';
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
-sbj_names = sheet.subject_name
+sbj_names = sheet.subject_name;
 sbj_name = sbj_names{end};
 % for i = 1:length(sbj_names)
 %   create_nwb_file(sbj_name)
