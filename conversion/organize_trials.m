@@ -1,5 +1,4 @@
-function [organized_trials] = organize_trials(sbj_name)
-
+function [organized_trials] = organize_trials(sbj_name, fsample)
 
 %goes through all blocks, creates 'trial' time interval object for each block
 %and adds to an array, array will go in intervals_trials group in nwb file
@@ -26,9 +25,23 @@ for i = 1: length(block_names)
     load(sbj_file{1})
     
     % add start & stop time to trialinfo table
-    trialinfo.start_time = (trialinfo.allonsets * 500);
-    trialinfo.stop_time = ((trialinfo.allonsets + trialinfo.RT) * 500);
+    trialinfo.start_time = (trialinfo.allonsets * fsample); %dont hardcode
 
+    %iterate through each row of trialinfo to check stoptimes
+    for curr_row = 1:height(trialinfo)
+        if trialinfo.condNames{curr_row} == "rest"
+            RT = (trialinfo.start_time(curr_row+1) - trialinfo.stop_time(curr_row-1))/500 -1; % to avoid cloggin while we find the precise duration of rest trials
+        elseif trialinfo.RT(curr_row) == 0
+            RT = 15;
+        else
+            RT = trialinfo.RT(curr_row);
+        end
+        
+        trialinfo.stop_time(curr_row) = (trialinfo.allonsets(curr_row) + RT) * fsample;
+    end
+    
+    
+    
     descrip1 = append(sbj_name, ' block: ', block_names{i});
 
 

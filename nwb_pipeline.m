@@ -1,5 +1,8 @@
 %% Generate Schema
-addpath '/Volumes/Areti_drive/code/matnwb';
+
+% prevents generateCore() from adding two folders in lbcn_nwb
+cd '/Volumes/Areti_drive/code/matnwb'
+addpath(genpath(pwd));
 generateCore();
 
 %% Basic Config
@@ -40,10 +43,6 @@ subject.species = 'Homo sapiens';
 % add birth_date? 
 [subject.sex, subject.age] = get_subject(sbj_name);
 
-
-% display subject object
-subject
-
 % set nwb subject
 nwb.general_subject = subject;
 
@@ -54,16 +53,46 @@ nwbExport(nwb, 'nwb_practice.nwb')
 cd('/Volumes/Areti_drive/code/matnwb');
 read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
 
+%% Electrode table
+%stores fields x, y, z, impedence, location, filtering, and electrode_group
+%but more can be added
+
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name);
+
+%% Link
+dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
+data = ConcatenateAll_continuous(sbj_name,task,block_names(1),dirs,[], 'CAR', 'CAR');
+load('/Volumes/Areti_drive/data/neuralData/originalData/S13_57_TVD/global_MMR_S13_57_TVD_TVD_08.mat')
+for i = 1:128
+    if sum(i == globalVar.badChan) == 1
+        plot(data.wave(i,:)+(i*1000), 'r')
+    else
+        plot(data.wave(i,:)+(i*1000), 'k')
+    end
+    hold on
+end
+
+
 %% Trials
-nwb.intervals_trials = organize_trials(sbj_name);
+nwb.intervals_trials = organize_trials(sbj_name, data.fsample);
 
 % to access different fields in vectordata, use .get('nameOfField').data
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
-%% Electrode table
-%stores fields x, y, z, impedence, location, filtering, and electrode_group
-%but more can be added
 
-nwb.general_extracellular_ephys_electrodes = get_electrodes(sbj_name);
+electrodes_object_view = types.untyped.ObjectView('/general/extracellular_ephys/electrodes');
+
+% 'table' attribute is a link to another DynamicTable (in this case, the electrodes table, tbl)
+% 'data' indicates the rows of the table
+electrode_table_region = types.hdmf_common.DynamicTableRegion(...
+    'table', electrodes_object_view, ...
+    'description', 'all electrodes', ...
+    'data', (0:height(tbl)-1)');
+
+
+
+
+
+
 

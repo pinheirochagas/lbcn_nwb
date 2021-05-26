@@ -1,4 +1,4 @@
-function [electrode_table] = get_electrodes(sbj_name)
+function [electrode_table, tbl] = get_electrodes(sbj_name)
 % creates electrodes table - describes electrodes that generated data
 
 
@@ -14,7 +14,7 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 % need to deidentify folder/filenames
 ext_name = sheet.subj_name_ext(strcmp(sheet.subject_name, sbj_name));
 
-subj_file = strcat('/Volumes/LBCN_Pedro/Stanford/data/neuralData/originalData/', ...
+subj_file = strcat('/Volumes/Areti_drive/data/neuralData/originalData/', ...
     ext_name{1}, '/subjVar_', ext_name{1}, '.mat');
 
 load(subj_file);
