@@ -5,9 +5,6 @@ generateCore();
 %% Basic Config
 [server_root, comp_root, code_root] = AddPaths('Areti');
 
-%% Initialize Directories
-project_name = 'MMR';
-
 %% Retrieve subject information
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
