@@ -1,8 +1,9 @@
-function data_all = ConcatenateAll_continuous(sbj_name, project_name, block_names, dirs,elecs, datatype, freq_band)
+function data_all = ConcatenateAll_continuous(sbj_name, project_name, block_names, dirs,elecs, datatype, freq_band, ext_name)
 %% Define electrodes
 
-% Load subjectVar
-load([dirs.original_data filesep sbj_name filesep 'subjVar_' sbj_name '.mat'])
+
+
+load([dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'])
 if isempty(elecs)
     elecs = 1:size(subjVar.elinfo,1);
 end
@@ -18,7 +19,7 @@ concatfields = {'wave'}; % type of data to concatenate
 for ei = 1:length(elecs)
     el = elecs(ei);
     
-    data_bn = concatBlocks_continuous(sbj_name,project_name,block_names,dirs,el,freq_band,datatype,concatfields);
+    data_bn = concatBlocks_continuous(sbj_name,project_name,block_names,dirs,el,freq_band,datatype,concatfields, ext_name);
     elecnans(ei) = sum(sum(isnan(data_bn.wave)));
     
     % Concatenate all subjects all trials

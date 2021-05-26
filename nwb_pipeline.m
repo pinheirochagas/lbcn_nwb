@@ -7,13 +7,27 @@ generateCore();
 
 %% Basic Config
 [server_root, comp_root, code_root] = AddPaths('Areti');
+dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
 
-%% Retrieve subject information
+%% Retrieve subject & block information
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 sbj_names = sheet.subject_name;
 sbj_name = sbj_names{end};
+
+% get info from google sheets till info is deidentified, then will be able
+% to use sbj_name instead of ext_name
+% Load table
+[DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
+sheet = GetGoogleSpreadsheet(DOCID, GID);
+
+% load subjVar file, need to deidentify folder/filenames
+ext_name = sheet.subj_name_ext(strcmp(sheet.subject_name, sbj_name)); 
+
+%get block name
+block_name = sheet.block1(strcmp(sheet.subject_name, sbj_name));
+
 % for i = 1:length(sbj_names)
 %   create_nwb_file(sbj_name)
 % end
@@ -46,23 +60,14 @@ subject.species = 'Homo sapiens';
 % set nwb subject
 nwb.general_subject = subject;
 
-%% Test write
-nwbExport(nwb, 'nwb_practice.nwb')
+%% Concatenate block data
+data = ConcatenateAll_continuous(sbj_name,nwb.session_description,block_name,dirs,[], 'CAR', 'CAR', ext_name);
 
-% go to matnwb folder 
-cd('/Volumes/Areti_drive/code/matnwb');
-read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
+% load globalVars
+glob_file = [dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
+load(glob_file);
 
-%% Electrode table
-%stores fields x, y, z, impedence, location, filtering, and electrode_group
-%but more can be added
-
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name);
-
-%% Link
-dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
-data = ConcatenateAll_continuous(sbj_name,task,block_names(1),dirs,[], 'CAR', 'CAR');
-load('/Volumes/Areti_drive/data/neuralData/originalData/S13_57_TVD/global_MMR_S13_57_TVD_TVD_08.mat')
+% display EEG data for all channels, noisy channels shown in red
 for i = 1:128
     if sum(i == globalVar.badChan) == 1
         plot(data.wave(i,:)+(i*1000), 'r')
@@ -72,15 +77,21 @@ for i = 1:128
     hold on
 end
 
+%% Electrode table
+%stores fields x, y, z, impedence, location, filtering, and electrode_group
+%but more can be added
+
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, dirs, ext_name);
+
 
 %% Trials
-nwb.intervals_trials = organize_trials(sbj_name, data.fsample);
+nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, dirs, ext_name);
 
 % to access different fields in vectordata, use .get('nameOfField').data
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
-
+%% Link tables
 electrodes_object_view = types.untyped.ObjectView('/general/extracellular_ephys/electrodes');
 
 % 'table' attribute is a link to another DynamicTable (in this case, the electrodes table, tbl)
@@ -90,7 +101,22 @@ electrode_table_region = types.hdmf_common.DynamicTableRegion(...
     'description', 'all electrodes', ...
     'data', (0:height(tbl)-1)');
 
+% TODO: add starting time and starting time rate info
+electrical_series = types.core.ElectricalSeries( ...
+    'starting_time', 0.0, ...
+    'data', data.wave, ...
+    'electrodes', electrode_table_region, ...
+    'data_unit', 'volts');
 
+% set nwb data
+nwb.acquisition.set('ElectricalSeries', electrical_series);
+
+%% Test write
+nwbExport(nwb, 'nwb_practice.nwb')
+
+% go to matnwb folder 
+cd('/Volumes/Areti_drive/code/matnwb');
+read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
 
 
 
