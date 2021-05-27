@@ -14,7 +14,7 @@ dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_Neu
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 sbj_names = sheet.subject_name;
-sbj_name = sbj_names{end};
+sbj_name = sbj_names{end}
 
 % get info from google sheets till info is deidentified, then will be able
 % to use sbj_name instead of ext_name
@@ -26,7 +26,7 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 ext_name = sheet.subj_name_ext(strcmp(sheet.subject_name, sbj_name)); 
 
 %get block name
-block_name = sheet.block1(strcmp(sheet.subject_name, sbj_name));
+block_name = sheet.block1(strcmp(sheet.subject_name, sbj_name))
 
 % for i = 1:length(sbj_names)
 %   create_nwb_file(sbj_name)
@@ -59,9 +59,10 @@ subject.species = 'Homo sapiens';
 
 % set nwb subject
 nwb.general_subject = subject;
+nwb.general_subject
 
 %% Concatenate block data
-data = ConcatenateAll_continuous(sbj_name,nwb.session_description,block_name,dirs,[], 'CAR', 'CAR', ext_name);
+data = ConcatenateAll_continuous(sbj_name,nwb.session_description,block_name,dirs ,[], 'CAR', 'CAR', ext_name);
 
 % load globalVars
 glob_file = [dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
@@ -82,10 +83,12 @@ end
 %but more can be added
 
 [nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, dirs, ext_name);
+tbl
 
 
 %% Trials
 nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, dirs, ext_name);
+nwb.intervals_trials
 
 % to access different fields in vectordata, use .get('nameOfField').data
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
@@ -104,6 +107,7 @@ electrode_table_region = types.hdmf_common.DynamicTableRegion(...
 % TODO: add starting time and starting time rate info
 electrical_series = types.core.ElectricalSeries( ...
     'starting_time', 0.0, ...
+    'starting_time_rate', data.fsample, ...
     'data', data.wave, ...
     'electrodes', electrode_table_region, ...
     'data_unit', 'volts');
@@ -115,8 +119,8 @@ nwb.acquisition.set('ElectricalSeries', electrical_series);
 nwbExport(nwb, 'nwb_practice.nwb')
 
 % go to matnwb folder 
-cd('/Volumes/Areti_drive/code/matnwb');
-read_nwbfile = nwbRead('/Volumes/Areti_drive/000019/sub-EC2/sub-EC2_ses-EC2-B9.nwb')
+
+read_nwbfile = nwbRead('nwb_practice.nwb')
 
 
 
