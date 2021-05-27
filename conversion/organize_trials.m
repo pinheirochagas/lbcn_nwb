@@ -24,7 +24,7 @@ trialinfo.start_time = (trialinfo.allonsets * fsample); %dont hardcode
 %iterate through each row of trialinfo to check stoptimes
 for curr_row = 1:height(trialinfo)
     if trialinfo.condNames{curr_row} == "rest"
-        RT = (trialinfo.start_time(curr_row+1) - trialinfo.stop_time(curr_row-1))/500 -1; % to avoid cloggin while we find the precise duration of rest trials
+        RT = (trialinfo.start_time(curr_row+1) - trialinfo.stop_time(curr_row-1))/fsample -1; % to avoid cloggin while we find the precise duration of rest trials
     elseif trialinfo.RT(curr_row) == 0
         RT = 15;
     else
@@ -32,6 +32,14 @@ for curr_row = 1:height(trialinfo)
     end
     
     trialinfo.stop_time(curr_row) = (trialinfo.allonsets(curr_row) + RT) * fsample;
+end
+
+%% Correct non strings in keys 
+for i = 1:size(trialinfo,1)
+   if isempty(trialinfo.keys{i})
+       trialinfo.keys{i} = 'noasnwer';
+   else
+   end
 end
 
 %% create trials from trialinfo
@@ -54,17 +62,22 @@ for i = 1:length(variables)
         organized_trials.stop_time = types.hdmf_common.VectorData('data', trialinfo.stop_time, 'description', variable_descriptions{i});
     else
         curr_col = variables{i};
-        organized_trials.vectordata.set(curr_col, types.hdmf_common.VectorData('data', trialinfo.(variables{i}), 'description', variable_descriptions{i}));
+        if iscell(trialinfo.(variables{i})) == 1
+            organized_trials.vectordata.set(curr_col, types.hdmf_common.VectorData('data', char(trialinfo.(variables{i})), 'description', variable_descriptions{i}));
+        else
+            organized_trials.vectordata.set(curr_col, types.hdmf_common.VectorData('data', trialinfo.(variables{i}), 'description', variable_descriptions{i}));
+        end
+        
+    end
+    
+    %     'colnames', {'start_time', 'stop_time', 'condNames', 'conds_math_memory', 'isCalc', 'CorrectResult'}, ...
+    %     'description', descrip ,...
+    %     'id', types.hdmf_common.ElementIdentifiers('data', 0:height(trialinfo)), ...
+    %     'start_time', types.hdmf_common.VectorData('data', trialinfo.start_time), ...
+    %     'stop_time', types.hdmf_common.VectorData('data', trialinfo.stop_time), ...
+    %     'condNames', types.hdmf_common.VectorData('data', trialinfo.condNames), ...
+    %     'cond_math_memory', types.hdmf_common.VectorData('data', trialinfo.conds_math_memory), ...
+    %     'isCalc', types.hdmf_common.VectorData('data', trialinfo.isCalc), ...
+    %     'CorrectResult', types.hdmf_common.VectorData('data', trialinfo.CorrectResult));
+    
 end
-
-%     'colnames', {'start_time', 'stop_time', 'condNames', 'conds_math_memory', 'isCalc', 'CorrectResult'}, ...
-%     'description', descrip ,...
-%     'id', types.hdmf_common.ElementIdentifiers('data', 0:height(trialinfo)), ...
-%     'start_time', types.hdmf_common.VectorData('data', trialinfo.start_time), ...
-%     'stop_time', types.hdmf_common.VectorData('data', trialinfo.stop_time), ...
-%     'condNames', types.hdmf_common.VectorData('data', trialinfo.condNames), ...
-%     'cond_math_memory', types.hdmf_common.VectorData('data', trialinfo.conds_math_memory), ...
-%     'isCalc', types.hdmf_common.VectorData('data', trialinfo.isCalc), ...
-%     'CorrectResult', types.hdmf_common.VectorData('data', trialinfo.CorrectResult));
-
-end 
