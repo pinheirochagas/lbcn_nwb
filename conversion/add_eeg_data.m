@@ -1,5 +1,16 @@
 function [electrical_series] = add_eeg_data(tbl, data)
-% links electrode table to electrical series and adds eeg data
+%ADD_EEG_DATA   add eeg data
+%   Links electrode table to electrical series and adds eeg data.
+%   
+%   INPUT:
+%       tbl: table of electrode infomation
+%       data: struct of wave and sample rate info (created in
+%       ConcatenateAll_continuous)
+%
+%   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
+%   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
+%   Copyright: MIT License 2021  
+
 
 electrodes_object_view = types.untyped.ObjectView('/general/extracellular_ephys/electrodes');
 
@@ -12,7 +23,7 @@ electrode_table_region = types.hdmf_common.DynamicTableRegion(...
     'data', (0:height(tbl)-1)');
 
 
-% TODO: add starting time and starting time rate info
+% add starting time and starting time rate info
 electrical_series = types.core.ElectricalSeries( ...
     'starting_time', 0.0, ...
     'starting_time_rate', data.fsample, ...

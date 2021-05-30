@@ -14,7 +14,7 @@ dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_Neu
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Retrieve subject & block information
-[sbj_name, block_name, ext_name] = get_names()
+[sbj_name, block_name, ext_name] = get_names(sheet);
 
 %% Set up NWB file
 nwb = NwbFile();
@@ -43,7 +43,6 @@ subject.species = 'Homo sapiens';
 
 % set nwb subject
 nwb.general_subject = subject;
-nwb.general_subject
 
 %% Concatenate block data
 data = ConcatenateAll_continuous(sbj_name,nwb.session_description,block_name,dirs ,[], 'CAR', 'CAR', ext_name);

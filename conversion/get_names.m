@@ -1,4 +1,7 @@
-function [sbj_name, block_name, ext_name] = get_names()
+function [sbj_name, block_name, ext_name] = get_names(sheet)
+%GET_NAMES 
+
+
 %get subject names and block names
 sbj_names = sheet.subject_name;
 sbj_name = sbj_names{end}
