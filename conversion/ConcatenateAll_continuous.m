@@ -1,4 +1,4 @@
-function data_all = ConcatenateAll_continuous(sbj_name, project_name, block_names, dirs, elecs, datatype, freq_band, ext_name)
+function data_all = ConcatenateAll_continuous(sbj_name, block_names, dirs, elecs, datatype, freq_band, ext_name)
 %CONCATENATEALL_CONTINUOUS  concatenate eeg data across electrodes
 %   function concatenates eeg data from all electrodes and returns a struct 
 %   containing the concatenated eeg data and sampling rate. 
@@ -26,7 +26,6 @@ end
 
 if ~isfield(subjVar, 'elinfo')
     data_format = GetFSdataFormat(sbj_name, 'Stanford');
-    subjVar = CreateSubjVar(sbj_name, dirs, data_format);
 else
 end
 

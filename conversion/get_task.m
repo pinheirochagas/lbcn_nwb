@@ -1,4 +1,4 @@
-function [task, general_keywords, session_start] = get_task(sbj_name)
+function [task, general_keywords, session_start] = get_task(sbj_name, sheet)
 %GET_TASK   task information
 %   [T, G, St] = GET_TASK(S) is the task name, keywords and session start
 %   data (or date of acquisition) that subject S completed. Information 
@@ -6,15 +6,11 @@ function [task, general_keywords, session_start] = get_task(sbj_name)
 %
 %   INPUTS:
 %       sbj_name: subject name
+%       sheet: google spreadsheet with subject info 
 %
 %   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
 %   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
 %   Copyright: MIT License 2021   
-
-
-% Load sheet
-[DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
-sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 task = sheet.task{strcmp(sheet.subject_name, sbj_name)};
 general_keywords = sheet.general_keywords{strcmp(sheet.subject_name, sbj_name)};

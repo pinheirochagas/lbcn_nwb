@@ -1,6 +1,13 @@
 function [sbj_name, block_name, ext_name] = get_names(sheet)
-%GET_NAMES 
-
+%GET_NAMES  gets subject name
+%   Accesses google sheet to get subject name and block infomation
+%   
+%   INPUT:
+%       sheet: google spreadsheet with subject info 
+%
+%   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
+%   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
+%   Copyright: MIT License 2021   
 
 %get subject names and block names
 sbj_names = sheet.subject_name;

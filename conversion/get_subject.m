@@ -1,22 +1,26 @@
-function [sex, age] = get_subject(sbj_name)
+function subject = get_subject(sbj_name, sheet)
 %GET_SUBJECT    subject demographics
-%   [Se, A] = GET_SUBJECT(S) is the sex and age of the subject with subject
-%   name S. Information is taken from google spreadsheet.
+%   Function returns a subject object with demographics information. 
+%   Information is taken from google spreadsheet.
 %   
 %   INPUTS:
 %       sbj_name: subject name
+%       sheet: google spreadsheet with subject info 
 %
 %   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
 %   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
 %   Copyright: MIT License 2021   
 
-% Load sheet
-[DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
-sheet = GetGoogleSpreadsheet(DOCID, GID);
+%create subject object
+subject = types.core.Subject();
 
-sex = sheet.sex(strcmp(sheet.subject_name, sbj_name));
-age = sheet.age(strcmp(sheet.subject_name, sbj_name));
+%set id 
+subject.subject_id = sbj_name;
 
+%add any other demographics info
+subject.species = 'Homo sapiens';
+subject.sex = sheet.sex(strcmp(sheet.subject_name, sbj_name));
+subject.age = sheet.age(strcmp(sheet.subject_name, sbj_name));
 
 end
 
