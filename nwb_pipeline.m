@@ -13,10 +13,6 @@ dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_Neu
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
-%% load globalVars
-glob_file = [dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
-load(glob_file);
-
 %% Convert data
 cfg = get_nwb_cfg(task) % default values
 cfg.save = false;
@@ -29,7 +25,7 @@ cfg.dirs.output_nwb = '/Volumes/Areti_drive/code/lbcn_nwb';
 cfg.save = true;
 cfg.datatype = 'CAR'% 'HFB', 'RAW'
 cfg.freq_band = 'CAR'% 'HFB', 'RAW'
-cfg.visualize_channels = true % display all channels w/ bad channels shown in red
+cfg.visualize_channels = false % display all channels w/ bad channels shown in red
 
 %iterate through subjects and blocks and create nwb files
 for i = 1:size(sheet)

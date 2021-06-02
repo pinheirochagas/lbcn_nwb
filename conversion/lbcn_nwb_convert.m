@@ -8,6 +8,10 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 %% Retrieve subject & block information
 [sbj_name, block_name, ext_name] = get_names(sheet);
 
+%% load globalVars
+glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
+load(glob_file);
+
 %% Initialize nwb file
 nwb = initialize_nwb(sbj_name, sheet);
 
@@ -15,10 +19,10 @@ nwb = initialize_nwb(sbj_name, sheet);
 % what subject info to include
 %   aka age, DOB, description, genotype, sex, species, subj_id -
 %   deidentified, no initials
-nwb.general_subject = get_subject(sbj_name, sheet)
+nwb.general_subject = get_subject(sbj_name, sheet);
 
 %% Concatenate block data
-data = ConcatenateAll_continuous(sbj_name,nwb.session_description,block_name,dirs ,[], cfg.datatype, cfg.freq_band, ext_name);
+data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
 
 %% For visualization - display data for all channels with bad channels in red
 if cfg.visualize_channels
@@ -53,8 +57,9 @@ nwb.acquisition.set('ElectricalSeries', electrical_series);
 
 %% Export file
 if cfg.save == true
-    cd(dirs.output_nwb)
-    nwbExport(nwb, 'nwb_practice.nwb')
+    cd(cfg.dirs.output_nwb)
+    ofile = ['nwb_' block_name{1} '.nwb']
+    nwbExport(nwb, ofile)
 else
 end
 
