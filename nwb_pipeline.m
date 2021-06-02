@@ -29,11 +29,9 @@ cfg.visualize_channels = false % display all channels w/ bad channels shown in r
 
 %iterate through subjects and blocks and create nwb files
 for i = 1:size(sheet)
+    sbj_name = sheet.subject_name{i}
     lbcn_nwb_convert(sbj_name, task, cfg)
 end 
-
-
-read_nwbfile = nwbRead('nwb_practice.nwb')
 
 
 
