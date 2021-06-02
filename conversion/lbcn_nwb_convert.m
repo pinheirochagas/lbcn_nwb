@@ -6,7 +6,7 @@ function nwb = lbcn_nwb_convert(sbj_name,task, cfg)
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Retrieve subject & block information
-[sbj_name, block_name, ext_name] = get_names(sheet);
+[block_name, ext_name] = get_names(sheet, sbj_name);
 
 %% load globalVars
 glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];

@@ -6,7 +6,7 @@ addpath(genpath(pwd));
 generateCore();
 
 %% Basic Config
-[server_root, comp_root, code_root] = AddPaths('Areti');
+[server_root, comp_root, code_root] = AddPaths('Pedro_drive');
 dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
 
 %% Link Google Spreadsheet with subject information
@@ -28,11 +28,12 @@ cfg.freq_band = 'CAR'% 'HFB', 'RAW'
 cfg.visualize_channels = false % display all channels w/ bad channels shown in red
 
 %iterate through subjects and blocks and create nwb files
-for i = 1:size(sheet)
-    sbj_name = sheet.subject_name{i}
+
+for i = 1:size(sheet, 1)
+    sbj_name = sheet.subject_name{i};
+    task = sheet.task{i};
     lbcn_nwb_convert(sbj_name, task, cfg)
 end 
-
 
 
 
