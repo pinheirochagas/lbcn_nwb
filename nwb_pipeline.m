@@ -1,7 +1,7 @@
 %% Generate Schema
+cd '/Volumes/Areti_drive/code/matnwb'
 generateExtension('/Volumes/Areti_drive/code/ndx-ecog/spec/ndx-ecog.namespace.yaml');
 % prevents generateCore() from adding two folders in lbcn_nwb
-cd '/Volumes/Areti_drive/code/matnwb'
 addpath(genpath(pwd));
 generateCore();
 
@@ -14,9 +14,9 @@ dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_Neu
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Convert data
-cfg = get_nwb_cfg(task) % default values
-cfg.save = false;
-lbcn_nwb_convert(sbj_name, task, cfg)
+%cfg = get_nwb_cfg(task) % default values
+%cfg.save = false;
+%lbcn_nwb_convert(sbj_name, task, cfg)
 
 
 cfg = [];

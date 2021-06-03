@@ -56,10 +56,10 @@ electrical_series = add_eeg_data(tbl, data);
 nwb.acquisition.set('ElectricalSeries', electrical_series);
 
 %% Create cortical surface
-cortical_surface = convert_cortical_surface(ext_name);
+cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 
 % set in subject portion of nwb
-nwb.subject = types.ndx_ecog.ECoGSubject('subject', cortical_surfaces);
+nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
 
 
 %% Export file

@@ -30,7 +30,7 @@ for ielec = 1:height(subjVar.elinfo)
     z = subjVar.elinfo.MNI_coord(ielec,3,1);
     
     imp = 'NaN';
-    location = subjVar.elinfo.DK_long_josef{ielec,1}{1};
+    location = subjVar.elinfo.DK_long_josef{ielec,1};
     filtering = 'common average';
     label = subjVar.elinfo.FS_label{ielec};
     

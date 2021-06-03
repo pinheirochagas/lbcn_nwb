@@ -1,4 +1,4 @@
-function cortical_surfaces = convert_cortical_surface(ext_name)
+function cortical_surfaces = convert_cortical_surface(ext_name, dirs)
 %% Cortical Surface
 
 %% load subjVar
