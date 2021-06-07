@@ -8,9 +8,12 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 %% Retrieve subject & block information
 [block_name, ext_name] = get_names(sheet, sbj_name);
 
-%% load globalVars
+%% load globalVars & subjVars
 glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
 load(glob_file);
+
+subjVars = [cfg.dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'];
+load(subjVars);
 
 %% Initialize nwb file
 nwb = initialize_nwb(sbj_name, sheet);
@@ -60,6 +63,8 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 
 % set in subject portion of nwb
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
+
+%% Convert volumes
 
 
 %% Export file
