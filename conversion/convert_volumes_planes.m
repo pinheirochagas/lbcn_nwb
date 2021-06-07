@@ -12,6 +12,8 @@ volumes_module = types.core.ProcessingModule('description', 'MRI Volumes');
 volumes_module.nwbdatainterface.set('volumes_module', volumes_module);
 nwb.processing.set('Volumes', volumes_module);
 
+grayscale_volume = types.ndx_grayscalevolume.GrayscaleVolume()
+
 end
 
  

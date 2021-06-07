@@ -1,6 +1,7 @@
 %% Generate Schema
 cd '/Volumes/Areti_drive/code/matnwb'
 generateExtension('/Volumes/Areti_drive/code/ndx-ecog/spec/ndx-ecog.namespace.yaml');
+generateExtension('/Volumes/Areti_drive/code/ndx-grayscalevolume/spec/ndx-grayscalevolume.namespace.yaml');
 % prevents generateCore() from adding two folders in lbcn_nwb
 addpath(genpath(pwd));
 generateCore();
