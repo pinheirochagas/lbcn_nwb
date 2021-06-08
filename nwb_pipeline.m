@@ -23,10 +23,12 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 cfg = [];
 cfg.dirs = dirs;
 cfg.dirs.output_nwb = '/Volumes/Areti_drive/code/lbcn_nwb';
-cfg.save = true;
+cfg.save = false;
 cfg.datatype = 'CAR';% 'HFB', 'RAW'
 cfg.freq_band = 'CAR';% 'HFB', 'RAW'
 cfg.visualize_channels = false; % display all channels w/ bad channels shown in red
+cfg.vol_to_planes = false; %convert volumes to planes 
+cfg.plot_elec = false; %plot electrodes
 
 %iterate through subjects and blocks and create nwb files
 

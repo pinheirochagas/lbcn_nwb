@@ -1,36 +1,28 @@
-function subjVar = convert_volumes_planes(subjVar)
+function subjVar = convert_volumes_planes(V, plot_elec)
+% CONVERT_VOLUMES_PLANES converts MRI volumes to planes
+%     Converts 256 x 256 x 256 MRI volume data into axial, sagittal, and 
+%     coronal planes that can be accessed from subjVar variable.
+%     
+%     INPUTS:
+%         V: raw MRI volumes data
+%         plot_elec: bool, plot electrode on axial, sagittal, and coronal view
+%         
+%   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
+%   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
+%   Copyright: MIT License 2021
 
 
-V = subjVar.V;
 for i = 1:size(V,1)
     subjVar.volumes.axial{i} = squeeze(V(:,i,:));
     subjVar.volumes.sagittal{i} = squeeze(V(i,:,:));
     subjVar.volumes.coronal{i} = squeeze(V(:,:,i))';
 end
 
-volumes_module = types.core.ProcessingModule('description', 'MRI Volumes');
-volumes_module.nwbdatainterface.set('volumes_module', volumes_module);
-nwb.processing.set('Volumes', volumes_module);
-
-grayscale_volume = types.ndx_grayscalevolume.GrayscaleVolume()
-
-plot_electrode_volume(subjVar, 1)
-
+if plot_elec
+    plot_electrode_volume(subjVar, el);
 end
 
- 
-% data = mri.vol(:,xyz(2,1),:)
-% 
-% 
-% for i = 1:size(xyz,1)
-%     axial{i} = squeeze(mri.vol(:,xyz(i,1),:));
-%     sagittal{i} = squeeze(mri.vol(xyz(i,2),:,:));
-%     coronal{i} = squeeze(mri.vol(:,:,xyz(i,3)))';
-% end
-% 
-% V = subjVar.V;
-% 
-
+end
 
 
 

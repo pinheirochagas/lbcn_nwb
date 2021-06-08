@@ -65,8 +65,16 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
 
 %% Convert volumes
+volumes_module = add_volumes(subjVar);
 
+%set in processing modules
+nwb.processing.set('Volumes', volumes_module);
 
+% convert volumes to planes & visualize
+if cfg.vol_to_planes
+    volumes = nwb.processing.get('Volumes').nwbdatainterface.get('grayscale_volume').data;
+    convert_volumes_planes(volumes, cfg.plot_elec);
+end
 %% Export file
 if cfg.save == true
     cd(cfg.dirs.output_nwb)
