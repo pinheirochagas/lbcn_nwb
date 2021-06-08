@@ -2,7 +2,7 @@ function subjVar = convert_volumes_planes(subjVar)
 
 
 V = subjVar.V;
-for i = 1:size(subjVar,1)
+for i = 1:size(V,1)
     subjVar.volumes.axial{i} = squeeze(V(:,i,:));
     subjVar.volumes.sagittal{i} = squeeze(V(i,:,:));
     subjVar.volumes.coronal{i} = squeeze(V(:,:,i))';
@@ -13,6 +13,8 @@ volumes_module.nwbdatainterface.set('volumes_module', volumes_module);
 nwb.processing.set('Volumes', volumes_module);
 
 grayscale_volume = types.ndx_grayscalevolume.GrayscaleVolume()
+
+plot_electrode_volume(subjVar, 1)
 
 end
 
@@ -28,24 +30,6 @@ end
 % 
 % V = subjVar.V;
 % 
-% 
-% el_coord = round(subjVar.elinfo.MGRID_coord(1,:))
-% 
-% planes = {'axial', 'sagittal', 'coronal'}
-% 
-% %not sure how to fix this, what is elecID?
-% for ip = 1:3
-%     subplot(1,3,ip)
-%     imshow(subjVar.volumes.(planes{ip}){el_coord(ip)})
-%     
-%     if strcmp(planes{ip}, 'axial')
-%         plot(xyz(elecId,3),xyz(elecId,2),'.','color',elecRgb(elecId,:),'markersize',30,'parent',slice2d_axes(1));
-%     elseif
-%         
-%     elseif
-%         
-%     end
-% end
 
 
 
