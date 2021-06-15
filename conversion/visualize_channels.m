@@ -16,5 +16,8 @@ for i = 1:128
     end
     hold on
 end
+title('All EEG Data')
+xlabel('time')
+ylabel('electrode')
 end
 
