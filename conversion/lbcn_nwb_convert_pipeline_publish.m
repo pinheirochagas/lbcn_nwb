@@ -1,13 +1,15 @@
 sbj_name = 'S13_57';
 task = 'MMR'
 
+
+
 cfg = [];
 cfg.dirs = dirs;
 cfg.dirs.output_nwb = '/Volumes/Areti_drive/code/lbcn_nwb/output_nwb';
 cfg.save = true;
 cfg.datatype = 'CAR';% 'HFB', 'RAW'
 cfg.freq_band = 'CAR';% 'HFB', 'RAW'
-cfg.visualize_channels = false; % display all channels w/ bad channels shown in red
+cfg.visualize_channels = true; % display all channels w/ bad channels shown in red
 cfg.vol_to_planes = false; %convert volumes to planes 
 cfg.plot_elec = false; %plot electrodes; % display all channels w/ bad channels shown in red
 cfg.vol_to_planes = false; %convert volumes to planes 
@@ -43,15 +45,10 @@ nwb.general_subject = get_subject(sbj_name, sheet);
 data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
 
 %% For visualization - display data for all channels with bad channels in red
+
+
 if cfg.visualize_channels
-    for i = 1:128
-    if sum(i == globalVar.badChan) == 1
-        plot(data.wave(i,:)+(i*1000), 'r')
-    else
-        plot(data.wave(i,:)+(i*1000), 'k')
-    end
-    hold on
-    end
+    visualize_channels(data, globalVar)
 end
 
 %% Electrode table
@@ -79,7 +76,7 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 % set in subject portion of nwb
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
 
-visualizecortex(cortical_surface);
+%visualizecortex(cortical_surface);
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);

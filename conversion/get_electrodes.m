@@ -20,7 +20,7 @@ load(subj_file);
 
 
 % add to variables as you add more info
-variables = {'x', 'y', 'z', 'imp', 'location', 'filtering', 'label'};
+variables = {'x_fsaverage', 'y_fsaverage', 'z_fsaverage', 'x_subject', 'y_subject', 'z_subject', 'imp', 'location', 'filtering', 'label'};
 tbl = cell2table(cell(0, length(variables)), 'VariableNames', variables);
 
 % iterate through subjVar for electrode info 
@@ -39,7 +39,7 @@ for ielec = 1:height(subjVar.elinfo)
     filtering = 'common average';
     label = subjVar.elinfo.FS_label{ielec};
     
-    tbl = [tbl; {x, y, z, imp, location, filtering, label}];
+    tbl = [tbl; {x_fsaverage, y_fsaverage, z_fsaverage, x_subject, y_subject, z_subject, imp, location, filtering, label}];
 end
 
 
