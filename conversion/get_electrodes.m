@@ -25,9 +25,14 @@ tbl = cell2table(cell(0, length(variables)), 'VariableNames', variables);
 
 % iterate through subjVar for electrode info 
 for ielec = 1:height(subjVar.elinfo)
-    x = subjVar.elinfo.MNI_coord(ielec,1,1);
-    y = subjVar.elinfo.MNI_coord(ielec,2,1);
-    z = subjVar.elinfo.MNI_coord(ielec,3,1);
+    x_fsaverage = subjVar.elinfo.MNI_coord(ielec,1,1);
+    y_fsaverage = subjVar.elinfo.MNI_coord(ielec,2,1);
+    z_fsaverage = subjVar.elinfo.MNI_coord(ielec,3,1);
+    
+    x_subject = subjVar.elinfo.LEPTO_coord(ielec,1,1);
+    y_subject = subjVar.elinfo.LEPTO_coord(ielec,2,1);
+    z_subject = subjVar.elinfo.LEPTO_coord(ielec,3,1);
+    
     
     imp = 'NaN';
     location = subjVar.elinfo.DK_long_josef{ielec,1};

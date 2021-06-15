@@ -11,10 +11,11 @@ function volumes_module = add_volumes(subjVar)
 %create processing module and GrayscaleVolume modules
 volumes_module = types.core.ProcessingModule('description', 'MRI Volumes');
 grayscale_volume = types.ndx_grayscalevolume.GrayscaleVolume();
+grayscale_volume.data = uint8.empty;
 
 %add data to grayscale volume
-grayscale_volume.data = subjVar.V;
-
+grayscale_volume.data = uint8(subjVar.V);
+grayscale_volume.data = cast(grayscale_volume.data, 'uint8');
 %set processing module
 volumes_module.nwbdatainterface.set('grayscale_volume', grayscale_volume);
 
