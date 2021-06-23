@@ -1,4 +1,4 @@
-function [electrode_table, tbl] = get_electrodes(sbj_name, dirs, ext_name)
+function [electrode_table, pdio_tbl] = get_electrodes(sbj_name, dirs, ext_name)
 %GET_ELECTRODES creates electrode table
 %   creates table of electrodes that generated data. Returns both table of
 %   electrode info (tbl) for visualization purposes and dynamic table of 
@@ -17,7 +17,6 @@ function [electrode_table, tbl] = get_electrodes(sbj_name, dirs, ext_name)
 
 subj_file = [dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'];
 load(subj_file);
-
 
 % add to variables as you add more info
 variables = {'x_fsaverage', 'y_fsaverage', 'z_fsaverage', 'x_subject', 'y_subject', 'z_subject', 'imp', 'location', 'filtering', 'label'};
@@ -42,7 +41,6 @@ for ielec = 1:height(subjVar.elinfo)
     tbl = [tbl; {x_fsaverage, y_fsaverage, z_fsaverage, x_subject, y_subject, z_subject, imp, location, filtering, label}];
 end
 
+pdio_tbl = [tbl; {NaN, NaN, NaN, NaN, NaN, NaN, 'Pdio', 'Pdio', 'Pdio', 'Pdio'}];
 
-%descrip = ['all electrodes, bad channels: ' globalVar.badChan]
-
-electrode_table = util.table2nwb(tbl, 'all electrodes');
+electrode_table = util.table2nwb(pdio_tbl, 'all electrodes');

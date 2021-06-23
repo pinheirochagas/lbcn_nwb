@@ -29,14 +29,7 @@ data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype
 
 %% For visualization - display data for all channels with bad channels in red
 if cfg.visualize_channels
-    for i = 1:128
-    if sum(i == globalVar.badChan) == 1
-        plot(data.wave(i,:)+(i*1000), 'r')
-    else
-        plot(data.wave(i,:)+(i*1000), 'k')
-    end
-    hold on
-    end
+    visualize_channels(data, globalVar, subjVar)
 end
 
 %% Electrode table
@@ -45,18 +38,17 @@ end
 
 [nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name);
 
-%% Trials
-% to access different fields in vectordata, use .get('nameOfField').data
-% for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
-%           will get the first block's 'CorrectResult' data 
-
-nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name);
-
 %% Link tables & add eeg data
 electrical_series = add_eeg_data(tbl, data);
 
 % set nwb data
 nwb.acquisition.set('ElectricalSeries', electrical_series);
+%% Trials
+% to access different fields in vectordata, use .get('nameOfField').data
+% for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
+%           will get the first block's 'CorrectResult' data 
+
+nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name, data);
 
 %% Create cortical surface
 cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
@@ -79,6 +71,11 @@ end
 if cfg.save == true
     cd(cfg.dirs.output_nwb)
     ofile = ['nwb_' block_name{1} '.nwb']
+    if isfile(ofile)
+        delete ofile
+    else
+    end
+    
     nwbExport(nwb, ofile)
 else
 end

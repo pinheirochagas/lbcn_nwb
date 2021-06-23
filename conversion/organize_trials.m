@@ -1,4 +1,4 @@
-function [organized_trials] = organize_trials(sbj_name, fsample, block_name, dirs, ext_name)
+function [organized_trials] = organize_trials(sbj_name, fsample, block_name, dirs, ext_name, data)
 %ORGANIZED_TRIALS trial info
 %   returns TimeIntervals type with trial information from specific block
 %
@@ -82,5 +82,7 @@ for i = 1:length(variables)
         end
         
     end
-    
 end
+
+organized_trials.colnames{end + 1} = 'Pdio';
+organized_trials.vectordata.set('Pdio', types.hdmf_common.VectorData('data', data.pdio, 'description', 'photodiode channel'));

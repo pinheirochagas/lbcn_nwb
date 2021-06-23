@@ -1,28 +1,25 @@
 sbj_name = 'S13_57';
 task = 'MMR'
 
+%% Configure
+cfg = configure_nwb();
 
-
-cfg = [];
-cfg.dirs = dirs;
-cfg.dirs.output_nwb = '/Volumes/Areti_drive/data/nwbData';
-cfg.save = true;
-cfg.datatype = 'CAR';% 'HFB', 'RAW'
-cfg.freq_band = 'CAR';% 'HFB', 'RAW'
-cfg.visualize_channels = true; % display all channels w/ bad channels shown in red
-cfg.vol_to_planes = false; %convert volumes to planes 
-cfg.plot_elec = false; %plot electrodes; % display all channels w/ bad channels shown in red
-cfg.vol_to_planes = false; %convert volumes to planes 
-cfg.plot_elec = false; %plot electrodes
-
+%display cfg
+cfg
 %% Link Google Spreadsheet with subject information
+
+%access to google sheet
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Retrieve subject & block information
+
+%retrieves full subject name (ext_name) and block name to be converted
 [block_name, ext_name] = get_names(sheet, sbj_name);
 
-%% load globalVars & subjVars
+%% Load Files
+%load files with data to be added to nwb - subject demographics,
+%   global variables, etc.
 glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
 load(glob_file);
 
@@ -30,12 +27,16 @@ subjVars = [cfg.dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_na
 load(subjVars);
 
 %% Initialize nwb file
+%create nwb file object
+
+%initializes nwb file with general information like institution,
+%   keywords, etc 
 nwb = initialize_nwb(sbj_name, sheet);
 
 %nwb object
 nwb
 %% Subject Information
-% what subject info to include
+% adds subject demographic information
 %   aka age, DOB, description, genotype, sex, species, subj_id -
 %   deidentified, no initials
 nwb.general_subject = get_subject(sbj_name, sheet);
@@ -44,12 +45,13 @@ nwb.general_subject = get_subject(sbj_name, sheet);
 nwb.general_subject
 
 %% Concatenate block data
+%concatenates data from all electrodes and returns struct of data &
+%   sampling rate
 data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
 
 %structure of data
 data
-%% For visualization - display data for all channels with bad channels in red
-
+%% For visualization
 %displays eeg data for all electrode channels
 %bad channels are displayed in red
 if cfg.visualize_channels
@@ -75,13 +77,24 @@ nwb.general_extracellular_ephys_electrodes.colnames
 %'label' can be accessed with:
 nwb.general_extracellular_ephys_electrodes.vectordata.get('label').data(1:10)
 
+%% Link tables & add eeg data
+%Stores the raw acquired data, we put the raw data that is downsampled
+%to 1000 hz
+electrical_series = add_eeg_data(tbl, data);
+
+% set nwb data
+nwb.acquisition.set('ElectricalSeries', electrical_series);
+
+%eeg data accessed through nwb file:
+nwb.acquisition.get('ElectricalSeries')
+
 
 %% Trials
 % to access different fields in vectordata, use .get('nameOfField').data
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
-nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name);
+nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name, data);
 
 %organized trials object
 nwb.intervals_trials
@@ -91,14 +104,10 @@ nwb.intervals_trials.start_time.data(1:10)
 
 %types.untyped.Set can be accessed with getter functions
 nwb.intervals_trials.vectordata.get('isCalc').data(1:10)
-%% Link tables & add eeg data
-electrical_series = add_eeg_data(tbl, data);
 
-% set nwb data
-nwb.acquisition.set('ElectricalSeries', electrical_series);
-
-%eeg data accessed through nwb file:
-nwb.acquisition.get('ElectricalSeries')
+%Photodiode channel added to nwb.intervals_trials, to plot photodiode data use:
+close all;
+plot(nwb.intervals_trials.vectordata.get('Pdio').data);
 
 %% Create cortical surface
 cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
