@@ -39,7 +39,13 @@ for ei = 1:length(elecs)
     
     % Concatenate all subjects all trials
     data_all.wave(ei,:) = data_bn.wave;
-    data_all.fsample = data_bn.fsample;
+    %data_all.fsample = data_bn.fsample;
 end
+
+%% add photodiode channels
+data_all.pdio = data_bn.pdio;
+
+[fs_iEEG, fs_Pdio, data_format] = GetFSdataFormat(ext_name{1}, 'Stanford');
+data_all.fsample = fs_Pdio;
 
 end

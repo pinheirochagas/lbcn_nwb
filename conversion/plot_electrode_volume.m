@@ -8,14 +8,14 @@ el_coord = round([nwb.general_extracellular_ephys_electrodes.vectordata.get('x')
 planes = fields(subjVar.volumes);
 sVol = size(subjVar.volumes.axial,2);
 
-
 xyz(1,1)=el_coord(1,2);
 xyz(1,2)=el_coord(1,1);
 xyz(1,3)=sVol-el_coord(1,3);
 
-%not sure how to fix this, what is elecID?
+%not sure how to fix this part, something wrong with the coord?
 for ip = 1:3
     subplot(1,3,ip)
+    %error, el_coord(ip) is negative
     imshow(subjVar.volumes.(planes{ip}){el_coord(ip)})
     hold on
     if strcmp(planes{ip}, 'axial')

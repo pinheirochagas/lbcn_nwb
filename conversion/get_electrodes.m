@@ -1,4 +1,4 @@
-function [electrode_table, tbl] = get_electrodes(sbj_name, dirs, ext_name)
+function [electrode_table, pdio_tbl] = get_electrodes(sbj_name, dirs, ext_name)
 %GET_ELECTRODES creates electrode table
 %   creates table of electrodes that generated data. Returns both table of
 %   electrode info (tbl) for visualization purposes and dynamic table of 
@@ -18,26 +18,29 @@ function [electrode_table, tbl] = get_electrodes(sbj_name, dirs, ext_name)
 subj_file = [dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'];
 load(subj_file);
 
-
 % add to variables as you add more info
-variables = {'x', 'y', 'z', 'imp', 'location', 'filtering', 'label'};
+variables = {'x_fsaverage', 'y_fsaverage', 'z_fsaverage', 'x_subject', 'y_subject', 'z_subject', 'imp', 'location', 'filtering', 'label'};
 tbl = cell2table(cell(0, length(variables)), 'VariableNames', variables);
 
 % iterate through subjVar for electrode info 
 for ielec = 1:height(subjVar.elinfo)
-    x = subjVar.elinfo.MNI_coord(ielec,1,1);
-    y = subjVar.elinfo.MNI_coord(ielec,2,1);
-    z = subjVar.elinfo.MNI_coord(ielec,3,1);
+    x_fsaverage = subjVar.elinfo.MNI_coord(ielec,1,1);
+    y_fsaverage = subjVar.elinfo.MNI_coord(ielec,2,1);
+    z_fsaverage = subjVar.elinfo.MNI_coord(ielec,3,1);
+    
+    x_subject = subjVar.elinfo.LEPTO_coord(ielec,1,1);
+    y_subject = subjVar.elinfo.LEPTO_coord(ielec,2,1);
+    z_subject = subjVar.elinfo.LEPTO_coord(ielec,3,1);
+    
     
     imp = 'NaN';
     location = subjVar.elinfo.DK_long_josef{ielec,1};
     filtering = 'common average';
     label = subjVar.elinfo.FS_label{ielec};
     
-    tbl = [tbl; {x, y, z, imp, location, filtering, label}];
+    tbl = [tbl; {x_fsaverage, y_fsaverage, z_fsaverage, x_subject, y_subject, z_subject, imp, location, filtering, label}];
 end
 
+pdio_tbl = [tbl; {NaN, NaN, NaN, NaN, NaN, NaN, 'Pdio', 'Pdio', 'Pdio', 'Pdio'}];
 
-%descrip = ['all electrodes, bad channels: ' globalVar.badChan]
-
-electrode_table = util.table2nwb(tbl, 'all electrodes');
+electrode_table = util.table2nwb(pdio_tbl, 'all electrodes');
