@@ -19,7 +19,7 @@ cfg = configure_nwb();
 
 %iterate through subjects and blocks and create nwb files
 
-parfor i = 1:size(sheet, 1)
+for i = 14:size(sheet, 1)
     nwb = lbcn_nwb_convert(sheet.subject_name{i}, sheet.task{i}, cfg);
 end 
 

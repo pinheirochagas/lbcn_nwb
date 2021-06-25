@@ -49,7 +49,7 @@ end
 %% Correct non strings in keys 
 for i = 1:size(trialinfo,1)
    if isempty(trialinfo.keys{i})
-       trialinfo.keys{i} = 'noasnwer';
+       trialinfo.keys{i} = 'noanswer';
    else
    end
 end
@@ -69,6 +69,14 @@ variable_descriptions = trialinfo.Properties.VariableNames;
 
 % iterate through trialinfo and add data
 for i = 1:length(variables)
+    if strcmp(sbj_name, 'S12_38') == 1 && strcmp(variables{i}, 'keys') == 1
+        trialinfo.keys{8} = '2';
+    end
+    if strcmp(sbj_name, 'S12_41') == 1 && strcmp(variables{i}, 'keys') == 1
+        trialinfo.keys{144} = '1';
+    end
+    
+    
     if variables{i} == "start_time"
         organized_trials.start_time = types.hdmf_common.VectorData('data', trialinfo.start_time, 'description', variable_descriptions{i});
     elseif variables{i} == "stop_time"

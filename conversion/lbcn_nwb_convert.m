@@ -29,7 +29,7 @@ data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype
 
 %% For visualization - display data for all channels with bad channels in red
 if cfg.visualize_channels
-    visualize_channels(data, globalVar, subjVar)
+    visualize_channels_data(data, globalVar, subjVar)
 end
 
 %% Electrode table
@@ -55,6 +55,8 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 
 % set in subject portion of nwb
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
+
+
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);

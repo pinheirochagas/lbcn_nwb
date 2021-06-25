@@ -27,6 +27,7 @@ data_all.trialinfo = [];
 for bi = 1:length(block_names)
     bn = block_names{bi};
     if datatype == 'RAW'
+        
         raw_dir_in = [dirs.original_data filesep ext_name{1} filesep bn];
         load(sprintf('%s/iEEG%s_%.2d.mat', raw_dir_in, bn, el));
     end
