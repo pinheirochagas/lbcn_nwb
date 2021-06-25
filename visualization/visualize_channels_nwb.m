@@ -1,8 +1,9 @@
-function visualize_channels_data(data, globalVar, subjVar)
-%VISUALIZE_CHANNELS_DATA plots eeg data from all electrodes using data struct
+function visualize_channels_nwb(nwb)
+%VISUALIZE_CHANNELS_NWB plots eeg data from all electrodes using
+%   information from nwb file
 %     INPUT:
-%         data: data: struct of wave and sample rate info (created in ConcatenateAll_continuous)
-%         globalVar: global variables structure
+%         nwb: Neurodata without borders object type
+%         
 %   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
 %   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
 %   Copyright: MIT License 2021  

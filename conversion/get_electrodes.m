@@ -15,11 +15,11 @@ function [electrode_table, pdio_tbl] = get_electrodes(sbj_name, dirs, ext_name)
 %   Copyright: MIT License 2021  
 
 
-subj_file = [dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'];
-load(subj_file);
+% subj_file = [dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_name{1} '.mat'];
+% load(subj_file);
 
 % add to variables as you add more info
-variables = {'x_fsaverage', 'y_fsaverage', 'z_fsaverage', 'x_subject', 'y_subject', 'z_subject', 'noisy_channel', 'imp', 'location', 'filtering', 'label'};
+variables = {'x_fsaverage', 'y_fsaverage', 'z_fsaverage', 'x_subject', 'y_subject', 'z_subject', 'imp', 'location', 'filtering', 'label'};
 tbl = cell2table(cell(0, length(variables)), 'VariableNames', variables);
 
 % iterate through subjVar for electrode info 
@@ -38,19 +38,14 @@ for ielec = 1:height(subjVar.elinfo)
     filtering = 'common average';
     label = subjVar.elinfo.FS_label{ielec};
     
-    for j = 1:size(globalVar.badChan, 2)
-        if ielec == globalVar.badChan(j)
-            noisy = 1;
-            break
-        else
-            noisy = 0;
-        end
-    end
-    
-    tbl = [tbl; {x_fsaverage, y_fsaverage, z_fsaverage, x_subject, y_subject, z_subject, noisy,imp, location, filtering, label}];
+    tbl = [tbl; {x_fsaverage, y_fsaverage, z_fsaverage, x_subject, y_subject, z_subject, imp, location, filtering, label}];
 end
 
-pdio_tbl = [tbl; [repmat({NaN},7,1); repmat({'Pdio'},4,1)]'];
+%adds photodiode channel
+tbl = [tbl; [repmat({NaN},9,1); repmat({'Pdio'},1,1)]'];
 
+%add noisy channels
+noisy_channel = ismember((1:height(subjVar.elinfo)), globalVar.badChan)';
+tbl.noisy_channels = [double(noisy_channel); NaN];
 
 electrode_table = util.table2nwb(pdio_tbl, 'all electrodes');
