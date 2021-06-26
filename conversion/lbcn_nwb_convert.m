@@ -36,7 +36,7 @@ end
 %stores fields x, y, z, impedence, location, filtering, and electrode_group
 %but more can be added
 
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name);
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name, cfg, block_name);
 
 %% Link tables & add eeg data
 electrical_series = add_eeg_data(tbl, data);

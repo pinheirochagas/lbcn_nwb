@@ -9,11 +9,11 @@ function visualize_channels_data(data, globalVar, subjVar)
        
 
 for i = 1:size(subjVar.elinfo, 1)
-%    if sum(i == globalVar.badChan) == 1
-%        plot(data.wave(i,:)+(i*1000), 'r')
-%    else
+   if sum(i == globalVar.badChan) == 1
+       plot(data.wave(i,:)+(i*1000), 'r')
+   else
         plot(data.wave(i,:)+(i*1000), 'k')
-%    end
+    end
     hold on
 end
 title('All EEG Data')

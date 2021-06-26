@@ -9,12 +9,18 @@ function visualize_channels_nwb(nwb)
 %   Copyright: MIT License 2021  
        
 
-for i = 1:size(subjVar.elinfo, 1)
-%    if sum(i == globalVar.badChan) == 1
-%        plot(data.wave(i,:)+(i*1000), 'r')
-%    else
-        plot(data.wave(i,:)+(i*1000), 'k')
-%    end
+%iterate through length of electrodes
+%photodiode channel is last channel
+for i = 1:(nwb.general_extracellular_ephys_electrodes.id.data.dims - 1)
+    
+   noisy = load(nwb.general_extracellular_ephys_electrodes.vectordata.get('noisy_channels').data);
+   data = load(nwb.acquisition.get('ElectricalSeries').data);
+
+   if noisy(i) == 1
+       plot(data(i,:)+(i*1000), 'r')
+   else
+        plot(data(i,:)+(i*1000), 'k')
+    end
     hold on
 end
 title('All EEG Data')
