@@ -1,4 +1,4 @@
-function plot_cortex(brain,electrodes,weights,hemi,viewside)
+function plot_cortex(cortex,electrodes,weights,hemi,viewside)
 % function [electrodes]=ctmr_gauss_plot(cortex,electrodes,weights)
 
 % hemi- 'l' for left hemipshere, 'r' for right hemisphere
@@ -39,7 +39,9 @@ cm = horzcat(G, G, G);
 
 %CHANGED: passed in vertices from nwb plot
 %brain=cortex.vert;
-brain
+
+%gets vertex data
+brain = cortex.vertices;
 
 
 % v='l';
@@ -77,7 +79,7 @@ for i=1:length(electrodes(:,1))
 end
 
 % c=(c/max(c));
-a=tripatch(cortex, 1, c'); %tripatch(cortex, '', c');
+a=tripatch_nwb(cortex, 1, c'); %tripatch(cortex, '', c');
 shading interp;
 a=get(gca);
 %%NOTE: MAY WANT TO MAKE AXIS THE SAME MAGNITUDE ACROSS ALL COMPONENTS TO REFLECT

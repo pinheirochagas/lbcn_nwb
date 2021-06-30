@@ -33,7 +33,7 @@ end
 concatfields = {'wave'}; % type of data to concatenate
 for ei = 1:length(elecs)
     el = elecs(ei);
-    if strcmp(sbj_name, 'S12_45') == 1 && el == 95
+    if strcmp(sbj_name, 'S12_45') == 1 && (el >= 95 && el < 100)
     else
         data_bn = concatBlocks_continuous(sbj_name,block_names,dirs,el,freq_band,datatype,concatfields, ext_name);
         elecnans(ei) = sum(sum(isnan(data_bn.wave)));

@@ -1,3 +1,5 @@
+
+
 sbj_name = 'S13_57';
 task = 'MMR'
 
@@ -7,18 +9,18 @@ cfg = configure_nwb();
 %display cfg
 cfg
 %% Link Google Spreadsheet with subject information
+% Access to google sheet
 
-%access to google sheet
 [DOCID,GID] = getGoogleSheetInfo_nwb('nwb_meta_data', 'cohort');
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Retrieve subject & block information
+% Retrieves full subject name (ext_name) and block name to be converted
 
-%retrieves full subject name (ext_name) and block name to be converted
 [block_name, ext_name] = get_names(sheet, sbj_name);
 
 %% Load Files
-%load files with data to be added to nwb - subject demographics,
+% Load files with data to be added to nwb - subject demographics,
 %   global variables, etc.
 glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
 load(glob_file);
@@ -27,42 +29,36 @@ subjVars = [cfg.dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_na
 load(subjVars);
 
 %% Initialize nwb file
-%create nwb file object
+% Create nwb file object
 
-%initializes nwb file with general information like institution,
+% initializes nwb file with general information like institution,
 %   keywords, etc 
 nwb = initialize_nwb(sbj_name, sheet);
 
 %nwb object
 nwb
 %% Subject Information
-% adds subject demographic information
-%   aka age, DOB, description, genotype, sex, species, subj_id -
-%   deidentified, no initials
+% Adds subject demographic information - 
+%   aka age, DOB, description, genotype, sex, species, subj_id 
 nwb.general_subject = get_subject(sbj_name, sheet);
 
 %subject object
 nwb.general_subject
 
 %% Concatenate block data
-%concatenates data from all electrodes and returns struct of data &
+% Concatenates data from all electrodes and returns struct of data &
 %   sampling rate
 data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
 
 %structure of data
 data
-%% For visualization
-%displays eeg data for all electrode channels
-%bad channels are displayed in red
-if cfg.visualize_channels
-    visualize_channels(data, globalVar)
-end
 
+% Displays eeg data for all electrode channels with bad channels  displayed in red
+visualize_channels_data(data, globalVar, subjVar)
 %% Electrode table
-%stores fields x, y, z, impedence, location, filtering, and electrode_group
-%but more can be added
+% Stores fields like x, y, z, left or right hemisphere, impedence, location, filtering, and electrode_group - more fields can be added
 
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name);
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name,cfg.dirs, ext_name, cfg, block_name);
 
 %electrode information in table format
 tbl(1:5, :)
@@ -78,8 +74,8 @@ nwb.general_extracellular_ephys_electrodes.colnames
 nwb.general_extracellular_ephys_electrodes.vectordata.get('label').data(1:10)
 
 %% Link tables & add eeg data
-%Stores the raw acquired data, we put the raw data that is downsampled
-%to 1000 hz
+% Stores the raw acquired data, we put the raw data that is downsampled
+%   to 1000 hz
 electrical_series = add_eeg_data(tbl, data);
 
 % set nwb data
@@ -90,7 +86,9 @@ nwb.acquisition.get('ElectricalSeries')
 
 
 %% Trials
-% to access different fields in vectordata, use .get('nameOfField').data
+% Trial information like start and stop times, response, etc
+
+% To access different fields in vectordata, use .get('nameOfField').data - 
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
@@ -121,7 +119,9 @@ nwb.general_subject.corticalsurfaces.value.surface
 %the left cortical surface information can be accessed with:
 nwb.general_subject.corticalsurfaces.value.surface.get('left')
 
-%visualizecortex(cortical_surface);
+%visualize electrodes on cortical surface:
+visualizecortex_pipeline(nwb, 'left', 'lateral')
+
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);
@@ -146,4 +146,8 @@ if cfg.save == true
 else
 end
 
+%% Visualization
+% Once the nwb file is exported, it can be read in to visualize electrodes
+% on the cortical surface
+visualizecortex('nwb_TVD_08.nwb', 'left', 'lateral')
 

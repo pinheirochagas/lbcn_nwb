@@ -75,6 +75,13 @@ for i = 1:length(variables)
     if strcmp(sbj_name, 'S12_41') == 1 && strcmp(variables{i}, 'keys') == 1
         trialinfo.keys{144} = '1';
     end
+    if strcmp(sbj_name, 'S12_36') == 1 && strcmp(variables{i}, 'keys') == 1
+        trialinfo.keys{127} = '1';
+    end
+    if strcmp(sbj_name, 'S12_41') == 1 && strcmp(variables{i}, 'keys') == 1
+        trialinfo.keys{112} = '1';
+        trialinfo.keys{116} = '1';
+    end
     
     
     if variables{i} == "start_time"
