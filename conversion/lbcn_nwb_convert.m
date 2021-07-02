@@ -29,14 +29,14 @@ data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype
 
 %% For visualization - display data for all channels with bad channels in red
 if cfg.visualize_channels
-    visualize_channels(data, globalVar, subjVar)
+    visualize_channels_data(data, globalVar, subjVar)
 end
 
 %% Electrode table
 %stores fields x, y, z, impedence, location, filtering, and electrode_group
 %but more can be added
 
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name);
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name, cfg, block_name);
 
 %% Link tables & add eeg data
 electrical_series = add_eeg_data(tbl, data);
@@ -55,6 +55,8 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 
 % set in subject portion of nwb
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
+
+
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);
