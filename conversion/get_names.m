@@ -14,7 +14,7 @@ ext_name = sheet.subj_name_ext(strcmp(sheet.subject_name, sbj_name));
 
 %get block name
 %TODO: fix? this only returns block1
-block_name = sheet.block1(strcmp(sheet.subject_name, sbj_name))
+block_name = sheet.block2(strcmp(sheet.subject_name, sbj_name))
 
 end
 

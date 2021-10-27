@@ -12,7 +12,6 @@ cfg.visualize_channels = false; % display all channels w/ bad channels shown in 
 cfg.vol_to_planes = false; %convert volumes to planes 
 cfg.plot_elec = false; %plot electrodes; % display all channels w/ bad channels shown in red
 cfg.vol_to_planes = false; %convert volumes to planes 
-cfg.plot_elec = false; %plot electrodes
 
 end
 
