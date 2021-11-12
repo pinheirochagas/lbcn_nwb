@@ -1,4 +1,4 @@
-function subject = get_subject(sbj_name, sheet)
+function subject = get_subject(de_name, sheet)
 %GET_SUBJECT    subject demographics
 %   Function returns a subject object with demographics information. 
 %   Information is taken from google spreadsheet.
@@ -15,12 +15,12 @@ function subject = get_subject(sbj_name, sheet)
 subject = types.core.Subject();
 
 %set id 
-subject.subject_id = sbj_name;
+subject.subject_id = de_name;
 
 %add any other demographics info
 subject.species = 'Homo sapiens';
-subject.sex = sheet.sex(strcmp(sheet.subject_name, sbj_name));
-subject.age = sheet.age(strcmp(sheet.subject_name, sbj_name));
+subject.sex = sheet.sex(strcmp(sheet.de_name, de_name));
+subject.age = sheet.age(strcmp(sheet.de_name, de_name));
 
 end
 

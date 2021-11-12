@@ -1,4 +1,4 @@
-function nwb = lbcn_nwb_convert(sbj_name,task, cfg)
+function nwb = lbcn_nwb_convert(de_name, task, cfg, round)
 % wraps whole pipeline here
 
 %% Link Google Spreadsheet with subject information
@@ -6,7 +6,8 @@ function nwb = lbcn_nwb_convert(sbj_name,task, cfg)
 sheet = GetGoogleSpreadsheet(DOCID, GID);
 
 %% Retrieve subject & block information
-[block_name, ext_name] = get_names(sheet, sbj_name);
+[block_name, ext_name, sbj_name] = get_names(sheet, de_name, round);
+de_blockname = [de_name '-' num2str(round)];
 
 %% load globalVars & subjVars
 glob_file = [cfg.dirs.original_data filesep ext_name{1} filesep 'global_MMR_' ext_name{1} '_' block_name{1} '.mat'];
@@ -16,13 +17,13 @@ subjVars = [cfg.dirs.original_data filesep ext_name{1} filesep 'subjVar_' ext_na
 load(subjVars);
 
 %% Initialize nwb file
-nwb = initialize_nwb(sbj_name, sheet);
+nwb = initialize_nwb(de_name, de_blockname, sheet);
 
 %% Subject Information
 % what subject info to include
 %   aka age, DOB, description, genotype, sex, species, subj_id -
 %   deidentified, no initials
-nwb.general_subject = get_subject(sbj_name, sheet);
+nwb.general_subject = get_subject(de_name, sheet);
 
 %% Concatenate block data
 data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
@@ -36,7 +37,7 @@ end
 %stores fields x, y, z, impedence, location, filtering, and electrode_group
 %but more can be added
 
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name, cfg.dirs, ext_name, cfg, block_name);
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(cfg.dirs, ext_name, cfg, block_name);
 
 %% Link tables & add eeg data
 electrical_series = add_eeg_data(tbl, data);
@@ -48,7 +49,7 @@ nwb.acquisition.set('ElectricalSeries', electrical_series);
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
-nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name, data);
+nwb.intervals_trials = organize_trials(de_name, sbj_name, data.fsample, block_name, de_blockname, cfg.dirs, ext_name, data);
 
 %% Create cortical surface
 cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
@@ -72,7 +73,7 @@ end
 %% Export file
 if cfg.save == true
     cd(cfg.dirs.output_nwb)
-    ofile = ['nwb_' block_name{1} '.nwb']
+    ofile = ['nwb_' de_blockname '.nwb']
     if isfile(ofile)
         delete ofile
     else

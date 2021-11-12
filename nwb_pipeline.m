@@ -19,8 +19,12 @@ cfg = configure_nwb();
 
 %iterate through subjects and blocks and create nwb files
 
-for i = 8:size(sheet, 1)
-    nwb = lbcn_nwb_convert(sheet.subject_name{i}, sheet.task{i}, cfg);
+for i = 1:size(sheet, 1)
+    
+    for round = 1:2
+        
+        nwb = lbcn_nwb_convert(sheet.de_name{i}, sheet.task{i}, cfg, round);
+    end
 end 
 
 %% Plot cortex with electrodes

@@ -1,7 +1,7 @@
 
-
-sbj_name = 'S13_57';
-task = 'MMR'
+de_name = 'S1';
+task = 'MMR';
+de_blockname = [de_name '-1']
 
 %% Configure
 cfg = configure_nwb();
@@ -17,7 +17,8 @@ sheet = GetGoogleSpreadsheet(DOCID, GID);
 %% Retrieve subject & block information
 % Retrieves full subject name (ext_name) and block name to be converted
 
-[block_name, ext_name] = get_names(sheet, sbj_name);
+[block_name, ext_name, sbj_name] = get_names(sheet, de_name, 1);
+
 
 %% Load Files
 % Load files with data to be added to nwb - subject demographics,
@@ -33,14 +34,14 @@ load(subjVars);
 
 % initializes nwb file with general information like institution,
 %   keywords, etc 
-nwb = initialize_nwb(sbj_name, sheet);
+nwb = initialize_nwb(de_name, de_blockname, sheet);
 
 %nwb object
 nwb
 %% Subject Information
 % Adds subject demographic information - 
 %   aka age, DOB, description, genotype, sex, species, subj_id 
-nwb.general_subject = get_subject(sbj_name, sheet);
+nwb.general_subject = get_subject(de_name, sheet);
 
 %subject object
 nwb.general_subject
@@ -58,7 +59,7 @@ visualize_channels_data(data, globalVar, subjVar)
 %% Electrode table
 % Stores fields like x, y, z, left or right hemisphere, impedence, location, filtering, and electrode_group - more fields can be added
 
-[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(sbj_name,cfg.dirs, ext_name, cfg, block_name);
+[nwb.general_extracellular_ephys_electrodes, tbl] = get_electrodes(cfg.dirs, ext_name, cfg, block_name);
 
 %electrode information in table format
 tbl(1:5, :)
@@ -92,7 +93,7 @@ nwb.acquisition.get('ElectricalSeries')
 % for example: nwb.intervals_trials(1).vectordata.get('CorrectResult').data
 %           will get the first block's 'CorrectResult' data 
 
-nwb.intervals_trials = organize_trials(sbj_name, data.fsample, block_name, cfg.dirs, ext_name, data);
+nwb.intervals_trials = organize_trials(de_name, sbj_name, data.fsample, block_name, de_blockname, cfg.dirs, ext_name, data);
 
 %organized trials object
 nwb.intervals_trials
@@ -141,7 +142,7 @@ end
 %% Export file
 if cfg.save == true
     cd(cfg.dirs.output_nwb)
-    ofile = ['nwb_' block_name{1} '.nwb']
+    ofile = ['nwb_' de_blockname '.nwb']
     nwbExport(nwb, ofile)
 else
 end
@@ -149,5 +150,26 @@ end
 %% Visualization
 % Once the nwb file is exported, it can be read in to visualize electrodes
 % on the cortical surface
-visualizecortex('nwb_TVD_08.nwb', 'left', 'lateral')
+visualizecortex('nwb_S12-1.nwb', 'left', 'lateral')
+
+%% Loading and Accessing Raw Data
+% After exporting the nwb files, they can be loaded again at a later time
+% using:
+nwb_readin = nwbRead('nwb_S12-1.nwb')
+
+% Reminder: The raw EEG data is stored in a DataStub type:
+nwb_readin.acquisition.get('ElectricalSeries').data;
+
+% To access the data, it must first be loaded using the following syntax:
+nwb.acquisition.get('ElectricalSeries').data.load();
+
+% Alternatively, to access a single row of the data, use the following
+% syntax:
+row1 = nwb.acquisition.get('ElectricalSeries').data(1,:);
+
+
+
+
+
+
 
