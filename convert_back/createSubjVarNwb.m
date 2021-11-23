@@ -35,5 +35,31 @@ subjVar.labels_EDF = [];
 subjVar.V = nwb.processing.get('Volumes').nwbdatainterface.get('grayscale_volume').data;
 
 % add elinfo
+% note - last row of vectordata is pdio data
+LvsR = nwb.general_extracellular_ephys_electrodes.vectordata.get('LvsR').data;
+DK_long_josef = nwb.general_extracellular_ephys_electrodes.vectordata.get('location').data;
+FS_label = nwb.general_extracellular_ephys_electrodes.vectordata.get('label').data;
+
+x_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_fsaverage').data;
+y_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_fsaverage').data;
+z_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_fsaverage').data;
+
+x_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_subject').data;
+y_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_subject').data;
+z_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_subject').data;
+
+
+for ielec = 1:length(LvsR)
+    MNI_coord(ielec, 1, 1) = x_fsaverage(ielec);
+    MNI_coord(ielec, 2, 1) = y_fsaverage(ielec);
+    MNI_coord(ielec, 3, 1) = z_fsaverage(ielec);
+    
+    LEPTO_coord(ielec, 1, 1) = x_subject(ielec);
+    LEPTO_coord(ielec, 2, 1) = y_subject(ielec);
+    LEPTO_coord(ielec, 3, 1) = z_subject(ielec);
+    
+end
+
+subjVar.elinfo = table(LvsR, DK_long_josef, FS_label, MNI_coord, LEPTO_coord)
 
 end
