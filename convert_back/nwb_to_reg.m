@@ -1,4 +1,4 @@
-function nwb = nwb_to_reg(nwb, cfg)
+function nwb_to_reg(nwb, cfg)
 % NWB_TO_REG convert nwb file to usable data format
 %   Formats data from nwb file to correct folders and names to be compatible
 %   with preprocessing pipeline
@@ -24,6 +24,9 @@ mkdir([cfg.originalData '/' sbj_name])
 % create correct folders and add data for psychData folder
 mkdir([cfg.psychData '/' sbj_name])
 
-% add trialinfo
+% creates and saves trialinfo
+trialinfo = createTrialInfo(nwb, cfg, sbj_name);
+
+
 
 end

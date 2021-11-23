@@ -17,9 +17,10 @@ cfg = configurecfg(dirs);
 cd([comp_root '/nwbData'])
 
 %iterate through each file and convert to original data format
-nwbfiles = dir('*.nwb')
+nwbfiles = dir('*.nwb');
+nwbfiles = dir('*-1.nwb');
 for file = nwbfiles'
-    
+    nwb_to_reg(file.name, cfg);
 end
 
 

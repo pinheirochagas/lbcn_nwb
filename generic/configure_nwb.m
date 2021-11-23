@@ -1,6 +1,6 @@
 function [cfg] = configure_nwb()
 [server_root, comp_root, code_root] = AddPaths('Areti');
-dirs = InitializeDirs(' ', ' ', comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
+dirs = InitializeDirs(' ', ' '); % 'Pedro_NeuroSpin2T'
 
 cfg = [];
 cfg.dirs = dirs;
