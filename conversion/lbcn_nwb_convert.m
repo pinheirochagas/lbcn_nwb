@@ -19,12 +19,6 @@ load(subjVars);
 %% Initialize nwb file
 nwb = initialize_nwb(de_name, de_blockname, sheet);
 
-%% Subject Information
-% what subject info to include
-%   aka age, DOB, description, genotype, sex, species, subj_id -
-%   deidentified, no initials
-nwb.general_subject = get_subject(de_name, sheet);
-
 %% Concatenate block data
 data = ConcatenateAll_continuous(sbj_name, block_name, cfg.dirs,[], cfg.datatype, cfg.freq_band, ext_name);
 
@@ -58,6 +52,13 @@ cortical_surface = convert_cortical_surface(ext_name, cfg.dirs);
 nwb.general_subject = types.ndx_ecog.ECoGSubject('subject', cortical_surface);
 
 
+%% Set Subject Information
+% set subject information
+%   aka age, DOB, description, genotype, sex, species, subj_id -
+%   deidentified, no initials
+get_subject(nwb.general_subject, de_name, sheet);
+
+
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);
@@ -78,7 +79,7 @@ if cfg.save == true
         delete ofile
     else
     end
-    
+    ofile = ['nwb_' de_blockname '.nwb']
     nwbExport(nwb, ofile)
 else
 end

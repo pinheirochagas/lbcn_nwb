@@ -24,9 +24,10 @@ mkdir([cfg.originalData '/' sbj_name])
 % create correct folders and add data for psychData folder
 mkdir([cfg.psychData '/' sbj_name])
 
-% creates and saves trialinfo
-trialinfo = createTrialInfo(nwb, cfg, sbj_name);
+% create and save trialinfo
+createTrialInfo(nwb, cfg, sbj_name);
 
-
+% create and save subjVar
+createSubjVarNwb(nwb, cfg, sbj_name);
 
 end

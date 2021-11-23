@@ -1,11 +1,21 @@
-function trialinfo = createTrialInfo(nwb, cfg, sbj_name)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+function createTrialInfo(nwb, cfg, sbj_name)
+%CREATETRIALINFO creates trialinfo file
+%   constructs properly formatted trialinfo table with 2 extra
+%   columns:start_time & stop_time. Saves trialinfo to psychData.
+%
+%   INPUTS:
+%       nwb: NwbFile type
+%       cfg: folder paths 
+%       sbj_name: deidentified subject name
+% 
+%   Laboratory of Behavioral and Cognitive Neuroscience, Stanford University
+%   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
+%   Copyright: MIT License 2021
 
 start_time = nwb.intervals_trials.start_time.data.load;
-end_time = nwb.intervals_trials.stop_time.data.load;
+stop_time = nwb.intervals_trials.stop_time.data.load;
 
-trialinfo = table(start_time, end_time);
+trialinfo = table(start_time, stop_time);
 
 colnames = nwb.intervals_trials.colnames;
 
