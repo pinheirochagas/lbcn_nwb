@@ -33,7 +33,7 @@ end
 
 % save trial info
 save_path = [cfg.psychData '/' sbj_name ];
-table_path_format = fullfile(save_path, ['trialinfo_' sbj_name '.mat'])
+table_path_format = fullfile(save_path, ['trialinfo_' sbj_name '.mat']);
 save(table_path_format, 'trialinfo');
 
 end

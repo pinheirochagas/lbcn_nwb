@@ -12,14 +12,16 @@ function createSubjVarNwb(nwb, cfg, sbj_name)
 %   Copyright: MIT License 2021
 
 % add name
-subjVar.sbj_name = sbj_name{1};
+subjVar.sbj_name = sbj_name;
 
 % demographics
 subject_name = nwb.general_subject.subject_id;
 sex = nwb.general_subject.sex;
 age = nwb.general_subject.age;
 
-subjVar.demographics = table(cellstr(subject_name), sex, age, 'VariableNames', {'subject_name', 'sex', 'age'});
+D = {subject_name sex age};
+
+subjVar.demographics = cell2table(D, 'VariableNames', {'subject_name' 'sex' 'age'});
 
 % add cortex
 subjVar.cortex.left.vert = nwb.general_subject.corticalsurfaces.value.surface.get('left').vertices';
@@ -32,21 +34,21 @@ subjVar.cortex.right.tri = nwb.general_subject.corticalsurfaces.value.surface.ge
 subjVar.labels_EDF = [];
 
 % add volumes
-subjVar.V = nwb.processing.get('Volumes').nwbdatainterface.get('grayscale_volume').data;
+subjVar.V = nwb.processing.get('Volumes').nwbdatainterface.get('grayscale_volume').data.load;
 
 % add elinfo
 % note - last row of vectordata is pdio data
-LvsR = nwb.general_extracellular_ephys_electrodes.vectordata.get('LvsR').data;
-DK_long_josef = nwb.general_extracellular_ephys_electrodes.vectordata.get('location').data;
-FS_label = nwb.general_extracellular_ephys_electrodes.vectordata.get('label').data;
+LvsR = nwb.general_extracellular_ephys_electrodes.vectordata.get('LvsR').data.load;
+DK_long_josef = nwb.general_extracellular_ephys_electrodes.vectordata.get('location').data.load;
+FS_label = nwb.general_extracellular_ephys_electrodes.vectordata.get('label').data.load;
 
-x_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_fsaverage').data;
-y_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_fsaverage').data;
-z_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_fsaverage').data;
+x_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_fsaverage').data.load;
+y_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_fsaverage').data.load;
+z_fsaverage = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_fsaverage').data.load;
 
-x_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_subject').data;
-y_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_subject').data;
-z_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_subject').data;
+x_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('x_subject').data.load;
+y_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('y_subject').data.load;
+z_subject = nwb.general_extracellular_ephys_electrodes.vectordata.get('z_subject').data.load;
 
 
 for ielec = 1:length(LvsR)
@@ -60,6 +62,11 @@ for ielec = 1:length(LvsR)
     
 end
 
-subjVar.elinfo = table(LvsR, DK_long_josef, FS_label, MNI_coord, LEPTO_coord)
+subjVar.elinfo = table(LvsR, DK_long_josef, FS_label, MNI_coord, LEPTO_coord);
+
+% save subjVar
+save_path = [cfg.originalData '/' sbj_name ];
+table_path_format = fullfile(save_path, ['subjVar_' sbj_name '.mat']);
+save(table_path_format, 'subjVar');
 
 end

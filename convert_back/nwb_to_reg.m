@@ -12,7 +12,7 @@ function nwb_to_reg(nwb, cfg)
 
 % load nwb data
 nwb = nwbRead(nwb);
-sbj_name = nwb.identifier;
+sbj_name = nwb.general_subject.subject_id;
 task = nwb.session_description;
 
 % create correct folders and add data for neuralData folder
@@ -29,5 +29,8 @@ createTrialInfo(nwb, cfg, sbj_name);
 
 % create and save subjVar
 createSubjVarNwb(nwb, cfg, sbj_name);
+
+% Write data
+addData(nwb, cfg, sbj_name);
 
 end
