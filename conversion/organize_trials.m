@@ -1,4 +1,4 @@
-function [organized_trials] = organize_trials(sbj_name, fsample, block_name, dirs, ext_name, data)
+function [organized_trials] = organize_trials(de_name, sbj_name, fsample, block_name, de_blockname, dirs, ext_name, data)
 %ORGANIZED_TRIALS trial info
 %   returns TimeIntervals type with trial information from specific block
 %
@@ -56,7 +56,7 @@ end
 
 %% create trials from trialinfo
 
-descrip = append(sbj_name, ' block: ', block_name); %general description
+descrip = append(de_name, ' block: ', de_blockname); %general description
 organized_trials.description = descrip;
 
 organized_trials.id = types.hdmf_common.ElementIdentifiers('data', 0:height(trialinfo));

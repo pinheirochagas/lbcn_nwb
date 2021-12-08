@@ -1,4 +1,4 @@
-function [task, general_keywords, session_start] = get_task(sbj_name, sheet)
+function [task, general_keywords, session_start] = get_task(de_name, sheet)
 %GET_TASK   task information
 %   [T, G, St] = GET_TASK(S) is the task name, keywords and session start
 %   data (or date of acquisition) that subject S completed. Information 
@@ -12,8 +12,8 @@ function [task, general_keywords, session_start] = get_task(sbj_name, sheet)
 %   Authors: Pedro Pinheiro-Chagas, Areti Majumdar
 %   Copyright: MIT License 2021   
 
-task = sheet.task{strcmp(sheet.subject_name, sbj_name)};
-general_keywords = sheet.general_keywords{strcmp(sheet.subject_name, sbj_name)};
+task = sheet.task{strcmp(sheet.de_name, de_name)};
+general_keywords = sheet.general_keywords{strcmp(sheet.de_name, de_name)};
 
 % date stored in month/day/year format
 % deidentified date of acquisition

@@ -1,4 +1,4 @@
-function nwb = initialize_nwb(sbj_name, sheet)
+function nwb = initialize_nwb(de_name, de_blockname, sheet)
 %INITIALIZE_NWB create & initialize nwb file
 %
 %   INPUTS:
@@ -10,9 +10,9 @@ function nwb = initialize_nwb(sbj_name, sheet)
 
 nwb = NwbFile();
 nwb.general_institution = 'Stanford';
-[nwb.session_description, nwb.general_keywords, nwb.session_start_time] = get_task(sbj_name, sheet);
-nwb.general_session_id = sbj_name;
-nwb.identifier = sbj_name;
+[nwb.session_description, nwb.general_keywords, nwb.session_start_time] = get_task(de_name, sheet);
+nwb.general_session_id = de_blockname;
+nwb.identifier = de_blockname;
 nwb.general_source_script_file_name	= 'nwb_pipeline.m';
 
 end
