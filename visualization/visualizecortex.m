@@ -1,7 +1,7 @@
 function visualizecortex(nwb, hemisphere, view)
 nwb = nwbRead(nwb);
 struct = nwb.general_subject.corticalsurfaces.value.surface.get(hemisphere);
-cortex.vertices = struct.vertices.load';
+cortex.vertices = s.load';
 cortex.faces = struct.faces.load';
 
 plot_cortex(cortex,[0 0 0], 0, hemisphere,view)

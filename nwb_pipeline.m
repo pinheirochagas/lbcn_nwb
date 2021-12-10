@@ -23,4 +23,4 @@ for i = 1:size(sheet, 1)
 end 
 
 %% Plot cortex with electrodes
- visualizecortex('nwb_TVD_10.nwb', 'left', 'lateral')
+ visualizecortex('nwb_S1-1.nwb', 'left', 'lateral')
