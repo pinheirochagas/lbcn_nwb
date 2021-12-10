@@ -38,13 +38,6 @@ nwb = initialize_nwb(de_name, de_blockname, sheet);
 
 %nwb object
 nwb
-%% Subject Information
-% Adds subject demographic information - 
-%   aka age, DOB, description, genotype, sex, species, subj_id 
-nwb.general_subject = get_subject(de_name, sheet);
-
-%subject object
-nwb.general_subject
 
 %% Concatenate block data
 % Concatenates data from all electrodes and returns struct of data &
@@ -123,6 +116,14 @@ nwb.general_subject.corticalsurfaces.value.surface.get('left')
 %visualize electrodes on cortical surface:
 visualizecortex_pipeline(nwb, 'left', 'lateral')
 
+%% Subject Information
+% Adds subject demographic information. NOTE: Subject information is added after cortical surface section because the subject needs to be an ECOG subject type to allow cortical surface to be added - 
+%   aka age, DOB, description, genotype, sex, species, subj_id 
+
+get_subject(nwb.general_subject, de_name, sheet);
+
+%subject object
+nwb.general_subject
 
 %% Convert volumes
 volumes_module = add_volumes(subjVar);
@@ -150,12 +151,12 @@ end
 %% Visualization
 % Once the nwb file is exported, it can be read in to visualize electrodes
 % on the cortical surface
-visualizecortex('nwb_S12-1.nwb', 'left', 'lateral')
+visualizecortex('nwb_S1-1.nwb', 'left', 'lateral')
 
 %% Loading and Accessing Raw Data
 % After exporting the nwb files, they can be loaded again at a later time
 % using:
-nwb_readin = nwbRead('nwb_S12-1.nwb')
+nwb_readin = nwbRead('nwb_S1-1.nwb')
 
 % Reminder: The raw EEG data is stored in a DataStub type:
 nwb_readin.acquisition.get('ElectricalSeries').data;
